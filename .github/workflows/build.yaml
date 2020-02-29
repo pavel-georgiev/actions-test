@@ -26,5 +26,5 @@ jobs:
         name: Publish release tag
         run:
           TAG=$(${{github.ref}} | cut -d/ -f 3)
-          docker tag pavelgeorgiev/ttt -t pavelgeorgiev/ttt:$TAG
+          docker tag pavelgeorgiev/ttt pavelgeorgiev/ttt:$TAG
           docker push pavelgeorgiev/ttt:$TAG
