@@ -1,3 +1,3 @@
 FROM alpine
 
-RUN date >> /tmp/.build
+RUN date >> /tmp/.buildss
