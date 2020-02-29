@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: Build docker image
         run:  |
-          echo ${{ github.event.push }}
+          echo ${{ toJson(github) }}
           echo ==========
           echo ${{ github.ref }}
           echo ==========
