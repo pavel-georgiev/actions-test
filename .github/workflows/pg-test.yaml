@@ -6,6 +6,6 @@ jobs:
     steps:
       - name: Build docker image
         run:  |
-          echo {{ github.event }}
+          echo ${{ github.event }}
           echo ==========
-          echo {{ github }}
+          echo ${{ github }}
