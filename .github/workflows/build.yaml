@@ -26,6 +26,6 @@ jobs:
         name: Publish release tag
         # shell: bash
         run: |
-          IMG_TAG=$(cut -d/ -f3 <<< ${{github.ref}});
+          IMG_TAG=$(cut -d/ -f3 <<< ${{github.ref}})
           docker tag pavelgeorgiev/ttt pavelgeorgiev/ttt:$IMG_TAG
           docker push pavelgeorgiev/ttt:$IMG_TAG
