@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Stub
-        run: exit 1
+        run: exit 0
 
   job_master_only:
     if: github.ref == 'refs/heads/master'
