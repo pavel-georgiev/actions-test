@@ -32,7 +32,7 @@ jobs:
 
 
   finally:
-    if: always()
+    if: always() # This is important, without it even on success this will not be executed if job_master_only is not run
     needs: [job1, job2, job_master_only]
     runs-on: ubuntu-latest
 
