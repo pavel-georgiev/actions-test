@@ -7,8 +7,7 @@ jobs:
       - uses: actions/checkout@v2
 
       # Build image
-      - name: Build docker image
-        run: docker build . -t pavelgeorgiev/ttt
+      - run: echo done job1
 
   job2:
     runs-on: ubuntu-latest
@@ -16,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Stub
-        run: exit 1
+        run: exit 0
 
   job_master_only:
     if: github.ref == 'refs/heads/master'
@@ -31,15 +30,35 @@ jobs:
 
 
 
-  finally:
-    if: always()
+  finally_success:
+    if: success() # redundant
     needs: [job1, job2, job_master_only]
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Slack Notification
+        uses: homoluctus/slatify@master
+        if: always() # redundant
+        with:
+          job_name: '(run id: ${{ github.run_id }})'
+          type: success
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          commit: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Stub
-        run: echo Done finally
-
+  finally_failure:
+    if: "! success()"
+    needs: [job1, job2, job_master_only]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: homoluctus/slatify@master
+        if: always() # is it needed?
+        with:
+          job_name: '(run id: ${{ github.run_id }})'
+          type: failure
+          mention: here
+          mention_if: true
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          commit: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
