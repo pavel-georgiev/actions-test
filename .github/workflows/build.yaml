@@ -30,14 +30,14 @@ jobs:
 
 
 
-  finally_success:
-    if: success() # redundant
+  finally_success_push:
+    if: github.ref == 'refs/heads/master' && success()
     needs: [job1, job2, job_master_only]
     runs-on: ubuntu-latest
     steps:
       - name: Slack Notification
         uses: homoluctus/slatify@master
-        if: always() # redundant
+        if: always() # redundant ???
         with:
           job_name: '(run id: ${{ github.run_id }})'
           type: success
@@ -45,19 +45,52 @@ jobs:
           commit: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  finally_failure:
-    if: "! success()"
+  finally_fail_push:
+    if: github.ref == 'refs/heads/master' && !success()
     needs: [job1, job2, job_master_only]
     runs-on: ubuntu-latest
     steps:
       - name: Slack Notification
         uses: homoluctus/slatify@master
-        if: always() # is it needed?
+        if: always() # redundant ???
         with:
           job_name: '(run id: ${{ github.run_id }})'
           type: failure
           mention: here
-          mention_if: true
+          mention_if: always
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          commit: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+
+  finally_success_nopush:
+    if: github.ref != 'refs/heads/master' && success()
+    needs: [job1, job2]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: homoluctus/slatify@master
+        if: always() # redundant ???
+        with:
+          job_name: '(run id: ${{ github.run_id }})'
+          type: success
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          commit: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  finally_fail_push:
+    if: github.ref != 'refs/heads/master' && !success()
+    needs: [job1, job2]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: homoluctus/slatify@master
+        if: always() # redundant ???
+        with:
+          job_name: '(run id: ${{ github.run_id }})'
+          type: failure
+          mention: here
+          mention_if: always
           url: ${{ secrets.SLACK_WEBHOOK }}
           commit: true
           token: ${{ secrets.GITHUB_TOKEN }}
