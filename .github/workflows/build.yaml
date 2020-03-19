@@ -32,7 +32,6 @@ jobs:
 
 
   finally:
-    if: always()
     needs: [job1, job2, job_master_only]
     runs-on: ubuntu-latest
 
